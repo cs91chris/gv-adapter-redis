@@ -1,4 +1,4 @@
-<!ELEMENT redis-call (Description?,(Set?, Get?, Delete?, Keys?, Sum?))>
+<!ELEMENT redis-call (Description?,(Set?, Get?, Delete?, Keys?, Sum?, Increment?, Decrement?))>
 <!ATTLIST redis-call type CDATA #FIXED "call">
 <!ATTLIST redis-call name CDATA #REQUIRED>
 <!ATTLIST redis-call endpoint CDATA #REQUIRED>
@@ -28,3 +28,11 @@
 <!ATTLIST Sum type CDATA #FIXED "redisOperation">
 <!ATTLIST Sum key CDATA #REQUIRED>
 <!ATTLIST Sum value CDATA #REQUIRED>
+
+<!ELEMENT Increment EMPTY>
+<!ATTLIST Increment type CDATA #FIXED "redisOperation">
+<!ATTLIST Increment key CDATA #REQUIRED>
+
+<!ELEMENT Decrement EMPTY>
+<!ATTLIST Decrement type CDATA #FIXED "redisOperation">
+<!ATTLIST Decrement key CDATA #REQUIRED>
