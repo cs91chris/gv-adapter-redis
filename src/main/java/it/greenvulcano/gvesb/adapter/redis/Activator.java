@@ -24,15 +24,18 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import it.greenvulcano.gvesb.virtual.OperationFactory;
+import it.greenvulcano.util.metadata.PropertiesHandler;
 
 public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		OperationFactory.registerSupplier("redis-call", RedisCall::new);
+		PropertiesHandler.registerHandler(new RedisPlaceholders());
 	}
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		OperationFactory.unregisterSupplier("redis-call");
+		PropertiesHandler.unregisterHandler(new RedisPlaceholders());
 	}
 }

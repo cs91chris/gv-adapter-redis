@@ -45,3 +45,9 @@ Here's an example:
 </redis-call>
 
 ```
+
+With Placeholders:
+
+	- redisGET{{endpoint::key}}
+	- redisINCR{{endpoint::key}}
+	- redisDECR{{endpoint::key}}
