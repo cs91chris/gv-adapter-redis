@@ -15,24 +15,21 @@
 	<properties>
 		<osgi.version>5.0.0</osgi.version>
 		<gvesb.version>4.1.0</gvesb.version>
+		<json.version>20190722</json.version>
+		<jedis.version>3.3.0</jedis.version>
+		<pax-logging-api.version>1.8.5</pax-logging-api.version>
 		<maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
 		<maven-bundle-plugin.version>3.0.1</maven-bundle-plugin.version>
-		<cloud.nexus.content>http://mvn.greenvulcano.com/nexus/content</cloud.nexus.content>
+		<maven-resource-plugin.version>3.0.2</maven-resource-plugin.version>
+		<build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>
+		<gv.cloud.nexus.content>http://mvn.greenvulcano.com/nexus/content</gv.cloud.nexus.content>
 	</properties>
 
 	<repositories>
 		<repository>
-			<id>gv</id>
-			<url>http://mvn.greenvulcano.com/nexus/content/groups/public</url>
-			<name>GreenVulcano</name>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>nexus-cloud</id>
-			<name>Cloud Nexus instance - PUBLIC</name>
-			<url>${cloud.nexus.content}/groups/public</url>
+			<id>gv-nexus-cloud</id>
+			<url>${gv.cloud.nexus.content}/groups/public</url>
+			<name>GreenVulcano Cloud Nexus instance</name>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -45,18 +42,17 @@
 	<distributionManagement>
 		<repository>
 			<id>nexus-cloud</id>
-			<name>Cloud Nexus instance - RELEASES </name>
-			<url>${cloud.nexus.content}/repositories/releases</url>
+			<name>Cloud Nexus instance - RELEASES</name>
+			<url>${gv.cloud.nexus.content}/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-cloud</id>
 			<name>Cloud Nexus instance - SNAPSHOTS</name>
-			<url>${cloud.nexus.content}/repositories/snapshots</url>
+			<url>${gv.cloud.nexus.content}/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
@@ -114,25 +110,18 @@
 		<dependency>
 			<groupId>org.ops4j.pax.logging</groupId>
 			<artifactId>pax-logging-api</artifactId>
-			<version>1.8.5</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
+			<version>${pax-logging-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20190722</version>
+			<version>${json.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>3.3.0</version>
-			<type>jar</type>
+			<version>${jedis.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -156,7 +145,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>${maven-resource-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>filter</id>
@@ -176,17 +165,16 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package/>
+						<Export-Package />
 						<Import-Package>*</Import-Package>
 						<Bundle-Activator>it.greenvulcano.gvesb.adapter.redis.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.9.1</version>
+				<version>${build-helper-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-artifacts</id>

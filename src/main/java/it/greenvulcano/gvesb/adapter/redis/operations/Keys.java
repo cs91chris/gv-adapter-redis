@@ -1,8 +1,6 @@
 
 package it.greenvulcano.gvesb.adapter.redis.operations;
 
-import java.util.Set;
-
 import org.w3c.dom.Node;
 
 import it.greenvulcano.configuration.XMLConfig;
@@ -27,16 +25,7 @@ public class Keys extends BaseOperation {
 	public String perform(GVBuffer gvBuffer) throws PropertiesHandlerException {
 		super.perform(gvBuffer);
 		
-		StringBuilder resp = new StringBuilder();
 		separator = (separator == null) ? defaultSeparator : PropertiesHandler.expand(separator, gvBuffer);
-		Set<String> res = client.keys(PropertiesHandler.expand(pattern, gvBuffer));
-		
-		for (String r : res) {
-			resp.append(r);
-			resp.append(separator);
-		}
-		
-		String data = resp.toString();
-		return data.substring(0, data.length() - separator.length());
+		return client.keys(PropertiesHandler.expand(pattern, gvBuffer), separator);
 	}
 }

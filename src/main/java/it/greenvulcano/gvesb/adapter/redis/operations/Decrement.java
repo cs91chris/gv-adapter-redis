@@ -24,6 +24,6 @@ public class Decrement extends BaseOperation {
 		super.perform(gvBuffer);
 		
 		key = PropertiesHandler.expand(key, gvBuffer);
-		return Long.toString(client.decr(key));
+		return client.decrement(key);
 	}
 }

@@ -40,8 +40,11 @@ Here's an example:
 	<Get type="redisOperation" key="testKey"/>
 	<Delete type="redisOperation" keys="testKey"/>
 	<Keys type="redisOperation" pattern="testKey*"/>
-	<Sum type="redisOperation" key="number" value="2"/>
-	<Sum type="redisOperation" key="number" value="-1"/>
+	<Sum type="redisOperation" key="number" number="2"/>
+	<Sum type="redisOperation" key="number" number="-1"/>
+	<Increment type="redisOperation" key="number"/>
+	<Decrement type="redisOperation" key="number"/>
+	<Get type="redisOperation" key="number"/>
 </redis-call>
 
 ```
@@ -51,3 +54,4 @@ With Placeholders:
 	- redisGET{{endpoint::key}}
 	- redisINCR{{endpoint::key}}
 	- redisDECR{{endpoint::key}}
+	- redisSUM{{endpoint::key::num}}

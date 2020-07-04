@@ -24,6 +24,6 @@ public class Increment extends BaseOperation {
 		super.perform(gvBuffer);
 		
 		key = PropertiesHandler.expand(key, gvBuffer);
-		return Long.toString(client.incr(key));
+		return client.increment(key);
 	}
 }

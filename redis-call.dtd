@@ -6,33 +6,41 @@
 
 <!ELEMENT Set EMPTY>
 <!ATTLIST Set type CDATA #FIXED "redisOperation">
+<!ATTLIST Set endpoint CDATA>
 <!ATTLIST Set key CDATA #REQUIRED>
-<!ATTLIST Set value CDATA #REQUIRED>
+<!ATTLIST Set value CDATA>
 <!ATTLIST Set append CDATA>
 <!ATTLIST Set expire-millis CDATA>
 <!ATTLIST Set only-if (exists?, not-exists?)>
 
 <!ELEMENT Get EMPTY>
 <!ATTLIST Get type CDATA #FIXED "redisOperation">
+<!ATTLIST Get endpoint CDATA>
 <!ATTLIST Get key CDATA #REQUIRED>
 
 <!ELEMENT Delete EMPTY>
 <!ATTLIST Delete type CDATA #FIXED "redisOperation">
+<!ATTLIST Delete endpoint CDATA>
 <!ATTLIST Delete keys CDATA #REQUIRED>
+<!ATTLIST Delete separator CDATA>
 
 <!ELEMENT Keys EMPTY>
 <!ATTLIST Keys type CDATA #FIXED "redisOperation">
+<!ATTLIST Keys endpoint CDATA>
 <!ATTLIST Keys pattern CDATA #REQUIRED>
 
 <!ELEMENT Sum EMPTY>
 <!ATTLIST Sum type CDATA #FIXED "redisOperation">
+<!ATTLIST Sum endpoint CDATA>
 <!ATTLIST Sum key CDATA #REQUIRED>
-<!ATTLIST Sum value CDATA #REQUIRED>
+<!ATTLIST Sum number CDATA #REQUIRED>
 
 <!ELEMENT Increment EMPTY>
 <!ATTLIST Increment type CDATA #FIXED "redisOperation">
+<!ATTLIST Increment endpoint CDATA>
 <!ATTLIST Increment key CDATA #REQUIRED>
 
 <!ELEMENT Decrement EMPTY>
 <!ATTLIST Decrement type CDATA #FIXED "redisOperation">
+<!ATTLIST Decrement endpoint CDATA>
 <!ATTLIST Decrement key CDATA #REQUIRED>

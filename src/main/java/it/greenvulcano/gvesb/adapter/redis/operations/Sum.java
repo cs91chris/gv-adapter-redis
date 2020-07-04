@@ -18,7 +18,7 @@ public class Sum extends BaseOperation {
 		super.init(node);
 		
 		key = XMLConfig.get(node, "@key");
-		value = XMLConfig.get(node, "@value", "1");
+		value = XMLConfig.get(node, "@number", "1");
 	}
 	
 	@Override
@@ -26,11 +26,7 @@ public class Sum extends BaseOperation {
 		super.perform(gvBuffer);
 		
 		key = PropertiesHandler.expand(key, gvBuffer);
-		Long numValue = Long.parseLong(PropertiesHandler.expand(value, gvBuffer));
-		
-		if (numValue > 0) {
-			return Long.toString(client.incrBy(key, numValue));
-		}
-		return Long.toString(client.decrBy(key, Math.abs(numValue)));
+		int numValue = Integer.parseInt(PropertiesHandler.expand(value, gvBuffer));
+		return client.sum(key, numValue);
 	}
 }

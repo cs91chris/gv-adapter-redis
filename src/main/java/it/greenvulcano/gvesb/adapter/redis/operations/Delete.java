@@ -28,6 +28,6 @@ public class Delete extends BaseOperation {
 		keys = PropertiesHandler.expand(keys, gvBuffer);
 		separator = (separator == null) ? defaultSeparator : PropertiesHandler.expand(separator, gvBuffer);
 		
-		return client.del(keys.split(separator)).toString();
+		return client.delete(keys, separator);
 	}
 }

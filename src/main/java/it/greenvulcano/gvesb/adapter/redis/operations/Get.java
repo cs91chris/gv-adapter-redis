@@ -23,6 +23,7 @@ public class Get extends BaseOperation {
 	public String perform(GVBuffer gvBuffer) throws PropertiesHandlerException {
 		super.perform(gvBuffer);
 		
-		return client.get(PropertiesHandler.expand(key, gvBuffer));
+		key = PropertiesHandler.expand(key, gvBuffer);
+		return client.get(key);
 	}
 }

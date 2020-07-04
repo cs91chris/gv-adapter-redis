@@ -19,12 +19,14 @@ public class RedisPlaceholders implements PropertyHandler {
 	
 	private String endpoint = null;
 	private String key = null;
-	private Jedis client = null;
+	private RedisAPI client = null;
+	List<String> tokens = null;
 	
 	static {
 		managedTypes.add("redisGET");
 		managedTypes.add("redisINCR");
 		managedTypes.add("redisDECR");
+		managedTypes.add("redisSUM");
 		Collections.unmodifiableList(managedTypes);
 	}
 	
@@ -64,7 +66,7 @@ public class RedisPlaceholders implements PropertyHandler {
 	
 	protected void resolve(String str) throws PropertiesHandlerException {
 		try {
-			List<String> tokens = TextUtils.splitByStringSeparator(str, separator);
+			tokens = TextUtils.splitByStringSeparator(str, separator);
 			endpoint = tokens.get(0);
 			key = tokens.get(1);
 		}
@@ -75,17 +77,20 @@ public class RedisPlaceholders implements PropertyHandler {
 	}
 	
 	protected String perform(String type) {
-		client = new Jedis(endpoint);
+		client = new RedisAPI(endpoint);
 		logger.debug(this.getClass().getName() + " perform: type=" + type);
 		
 		if (type.equals("redisGET")) {
 			return client.get(key);
 		}
 		else if (type.equals("redisINCR")) {
-			return Long.toString(client.incr(key));
+			return client.increment(key);
 		}
 		else if (type.equals("redisDECR")) {
-			return Long.toString(client.decr(key));
+			return client.decrement(key);
+		}
+		else if (type.equals("redisSUM")) {
+			return client.sum(key, Integer.parseInt(tokens.get(2)));
 		}
 		return null;
 	}

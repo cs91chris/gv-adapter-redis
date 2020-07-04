@@ -14,12 +14,10 @@ import it.greenvulcano.gvesb.adapter.redis.operations.BaseOperation;
 import it.greenvulcano.gvesb.buffer.GVBuffer;
 import it.greenvulcano.gvesb.virtual.CallException;
 import it.greenvulcano.gvesb.virtual.CallOperation;
-import it.greenvulcano.gvesb.virtual.ConnectionException;
 import it.greenvulcano.gvesb.virtual.InitializationException;
-import it.greenvulcano.gvesb.virtual.InvalidDataException;
 import it.greenvulcano.gvesb.virtual.OperationKey;
 import it.greenvulcano.util.metadata.PropertiesHandler;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class RedisCall implements CallOperation {
 	private OperationKey key = null;
@@ -29,7 +27,7 @@ public class RedisCall implements CallOperation {
 	private String name;
 	private String endpoint;
 	private String separator;
-	private Jedis client = null;
+	private RedisAPI client = null;
 	private boolean asJson = false;
 	protected NodeList operations = null;
 	protected List<BaseOperation> operationInstances = new ArrayList<>();
@@ -50,11 +48,10 @@ public class RedisCall implements CallOperation {
 			}
 			
 			if (operations == null) {
-				logger.warn("no operations found on redis-call: " + name);
-				return;
+				throw new InitializationException("no operations found on redis-call: " + name);
 			}
 			
-			client = new Jedis(endpoint);
+			client = new RedisAPI(endpoint);
 			
 			for (int i = 0; i < operations.getLength(); i++) {
 				BaseOperation op = null;
@@ -68,7 +65,6 @@ public class RedisCall implements CallOperation {
 				logger.debug("creating object from class: " + className);
 				op = (BaseOperation) Class.forName(className).newInstance();
 				op.setClient(client);
-				
 				op.init(opNode);
 				operationInstances.add(op);
 			}
@@ -82,7 +78,7 @@ public class RedisCall implements CallOperation {
 	}
 	
 	@Override
-	public GVBuffer perform(GVBuffer gvBuffer) throws ConnectionException, CallException, InvalidDataException {
+	public GVBuffer perform(GVBuffer gvBuffer) throws CallException {
 		try {
 			logger.debug("executing Redis call: " + name);
 			separator = (separator == null) ? BaseOperation.defaultSeparator
@@ -105,21 +101,27 @@ public class RedisCall implements CallOperation {
 				gvBuffer.setObject(data.substring(0, data.length() - 1));
 			}
 		}
-		catch (Exception exc) {
-			throw new CallException("GV_CALL_SERVICE_ERROR",
-					new String[][] { { "service", gvBuffer.getService() }, { "system", gvBuffer.getSystem() },
-							{ "tid", gvBuffer.getId().toString() }, { "message", exc.getMessage() } },
-					exc);
+		catch (Exception e) {
+			String[][] messages = new String[][] { { "service", gvBuffer.getService() },
+					{ "system", gvBuffer.getSystem() }, { "tid", gvBuffer.getId().toString() },
+					{ "message", e.getMessage() } };
+			throw new CallException("GV_CALL_SERVICE_ERROR", messages, e);
 		}
 		return gvBuffer;
 	}
 	
 	@Override
 	public void cleanUp() {
-		for (BaseOperation op : operationInstances) {
-			op.cleanUp();
+		try {
+			client.close();
+			
+			for (BaseOperation op : operationInstances) {
+				op.cleanUp();
+			}
 		}
-		client.close();
+		catch (JedisConnectionException e) {
+			logger.warn(e.getMessage(), e);
+		}
 	}
 	
 	@Override
